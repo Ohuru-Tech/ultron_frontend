@@ -7,7 +7,6 @@ This is an starter react project which built using:
 - [Mui](https://mui.com/)
 - [React Router](https://reacttraining.com/react-router/web/guides/quick-start)
 
-Works directly with [`drf-cookiecutter`](https://github.com/Ohuru-Tech/drf-cookiecutter)
 
 ### State management
 The project uses [`react-sweet-state`](https://github.com/atlassian/react-sweet-state) for state management, the CRUD is set up with a store in this project as an example, you should be careful about what you want to put in redux store, usually you can use the combination of `useEffect` and `useState`, it makes sense to put things in redux when you need to persist / cache data or use them at multiple places.
@@ -20,7 +19,7 @@ The project has a custom axios setup to support:
 - Error handling with interceptors.
 - Auto-add `Authorization` header with the user authorization token.
 
-The project then uses an API object to allow calling APIs seamlessly. Refer `src/apps/projects/utils/itemApi.ts` for more details on the same.
+The project then uses an API object to allow calling APIs seamlessly. Refer `src/apps/projects/utils/projectAPIs.ts` for more details on the same.
 
 ### Project Structure
 All the relavant code is inside `src/apps`, the apps are made according to a single use-case to allow separation of concern, react-sweet-state allows being able to have a "local" sort of redux store for the app which is useful in managing everything related to it right there, this might be useful in case the app grows in size and there is a need to pulish,manage and host these separately.
