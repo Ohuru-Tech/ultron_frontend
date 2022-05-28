@@ -1,10 +1,13 @@
 export interface ProjectState {
   selectedBackendTemplate: string;
-  backendTemplateConfig: any;
+  backendTemplateConfig: { [key: string]: string | { [key: string]: string } };
 
   selectedDatabaseType: string;
-  databaseSettings: any;
+  databaseSettings: { [key: string]: string };
 
   selectedFrontendTemplate: string;
-  frontendTemplateConfig: any;
+  frontendTemplateConfig: { [key: string]: string };
+
+  generatedFrontendDir?: string;
+  generatedBackendDir?: string;
 }

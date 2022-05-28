@@ -19,12 +19,12 @@ interface Props {
   onBack: () => void;
 }
 
-export function ChooseBackendTemplate({ onSave, onBack }: Props) {
+export function ChooseFrontendTemplate({ onSave, onBack }: Props) {
   const [loading, setLoading] = useState<boolean>(true);
   const [availableFrameworks, setAvailableFrameworks] = useState<string[]>([]);
   const [selectedFramework, setSelectedFramework] = useState<string>("");
 
-  const [{ selectedBackendTemplate }, { setSelectedBackend }] =
+  const [{ selectedFrontendTemplate }, { setSelectedFrontend }] =
     useProjectStore();
 
   useEffect(() => {
@@ -32,9 +32,9 @@ export function ChooseBackendTemplate({ onSave, onBack }: Props) {
       setLoading(true);
       const projectApis = ProjectAPIs();
       const { data: availableFrameworks } =
-        await projectApis.getBackendTemplates();
+        await projectApis.getFrontendTemplates();
       setAvailableFrameworks(availableFrameworks);
-      setSelectedFramework(selectedBackendTemplate);
+      setSelectedFramework(selectedFrontendTemplate);
       setLoading(false);
     }
     getAvailableFrameworks();
@@ -42,7 +42,9 @@ export function ChooseBackendTemplate({ onSave, onBack }: Props) {
 
   return (
     <Container maxWidth="xl" sx={{ m: 1, mt: 3, p: 1 }}>
-      <Typography variant="h4">Select the desired backend framework</Typography>
+      <Typography variant="h4">
+        Select the desired frontend framework
+      </Typography>
       {loading ? (
         <Skeleton />
       ) : (
@@ -78,16 +80,16 @@ export function ChooseBackendTemplate({ onSave, onBack }: Props) {
           }}
           onClick={async () => {
             setLoading(true);
-            await setSelectedBackend(selectedFramework);
+            await setSelectedFrontend(selectedFramework);
             onSave();
             setLoading(false);
           }}
         >
           {loading ? <CircularProgress /> : "Save"}
         </Button>
-        {/* <Button variant="contained" sx={{ mt: 1 }} onClick={onBack}>
+        <Button variant="contained" sx={{ mt: 1 }} onClick={onBack}>
           Back
-        </Button> */}
+        </Button>
       </Box>
     </Container>
   );

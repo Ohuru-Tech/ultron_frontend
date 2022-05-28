@@ -19,22 +19,23 @@ interface Props {
   onBack: () => void;
 }
 
-export function ChooseBackendTemplate({ onSave, onBack }: Props) {
+export function ChooseDatabase({ onSave, onBack }: Props) {
   const [loading, setLoading] = useState<boolean>(true);
-  const [availableFrameworks, setAvailableFrameworks] = useState<string[]>([]);
-  const [selectedFramework, setSelectedFramework] = useState<string>("");
+  const [availableDatabases, setAvailableDatabases] = useState<string[]>([]);
+  const [databaseType, setDatabaseType] = useState<string>("");
 
-  const [{ selectedBackendTemplate }, { setSelectedBackend }] =
+  const [{ selectedBackendTemplate, selectedDatabaseType }, { setSelectedDb }] =
     useProjectStore();
 
   useEffect(() => {
     async function getAvailableFrameworks() {
       setLoading(true);
       const projectApis = ProjectAPIs();
-      const { data: availableFrameworks } =
-        await projectApis.getBackendTemplates();
-      setAvailableFrameworks(availableFrameworks);
-      setSelectedFramework(selectedBackendTemplate);
+      const { data: dbs } = await projectApis.getSupportedDatabases(
+        selectedBackendTemplate
+      );
+      setAvailableDatabases(dbs);
+      setDatabaseType(selectedDatabaseType);
       setLoading(false);
     }
     getAvailableFrameworks();
@@ -42,22 +43,22 @@ export function ChooseBackendTemplate({ onSave, onBack }: Props) {
 
   return (
     <Container maxWidth="xl" sx={{ m: 1, mt: 3, p: 1 }}>
-      <Typography variant="h4">Select the desired backend framework</Typography>
+      <Typography variant="h4">Select the desired database</Typography>
       {loading ? (
         <Skeleton />
       ) : (
         <Select
           sx={{ mb: 2, mt: 3 }}
           fullWidth
-          value={selectedFramework}
+          value={databaseType}
           onChange={(event) => {
-            setSelectedFramework(event.target.value as string);
+            setDatabaseType(event.target.value as string);
           }}
         >
-          {availableFrameworks.map((framework) => {
+          {availableDatabases.map((database) => {
             return (
-              <MenuItem key={framework} value={framework}>
-                {framework}
+              <MenuItem key={database} value={database}>
+                {database}
               </MenuItem>
             );
           })}
@@ -78,16 +79,16 @@ export function ChooseBackendTemplate({ onSave, onBack }: Props) {
           }}
           onClick={async () => {
             setLoading(true);
-            await setSelectedBackend(selectedFramework);
+            await setSelectedDb(databaseType);
             onSave();
             setLoading(false);
           }}
         >
-          {loading ? <CircularProgress /> : "Save"}
+          {loading ? <CircularProgress sx={{ color: "white" }} /> : "Save"}
         </Button>
-        {/* <Button variant="contained" sx={{ mt: 1 }} onClick={onBack}>
+        <Button variant="contained" sx={{ mt: 1 }} onClick={onBack}>
           Back
-        </Button> */}
+        </Button>
       </Box>
     </Container>
   );

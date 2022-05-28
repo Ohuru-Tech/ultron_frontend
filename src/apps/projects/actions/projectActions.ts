@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 //
 import { ProjectState } from "apps/projects/models/state";
 import { successToastConfig } from "apps/common/utils/general/configs";
+import ProjectAPIs from "../utils/projectAPIs";
 
 // -----------------------------------------------------------------
 
@@ -34,19 +35,52 @@ export const setSelectedFrontend =
   };
 
 export const setBackendSettings =
-  (settings: any): Action<ProjectState> =>
-  async ({ setState }) => {
-    setState({ backendTemplateConfig: settings });
+  (settings: {
+    [key: string]: string | { [key: string]: string };
+  }): Action<ProjectState> =>
+  async ({ getState, setState }) => {
+    const { databaseSettings, selectedDatabaseType } = getState();
+    setState({
+      backendTemplateConfig: {
+        ...settings,
+        db_details: { ...databaseSettings, db_type: selectedDatabaseType },
+      },
+    });
   };
 
 export const setDbSettings =
-  (settings: any): Action<ProjectState> =>
+  (settings: { [key: string]: string }): Action<ProjectState> =>
   async ({ setState }) => {
     setState({ databaseSettings: settings });
   };
 
 export const setFrontendSettings =
-  (settings: any): Action<ProjectState> =>
+  (settings: { [key: string]: string }): Action<ProjectState> =>
   async ({ setState }) => {
     setState({ frontendTemplateConfig: settings });
+  };
+
+export const generateProjects =
+  (): Action<ProjectState> =>
+  async ({ getState, setState }) => {
+    const {
+      selectedBackendTemplate,
+      backendTemplateConfig,
+      selectedFrontendTemplate,
+      frontendTemplateConfig,
+    } = getState();
+    const projectApis = ProjectAPIs();
+    const { data: backendResult } = await projectApis.generateBackendProject(
+      selectedBackendTemplate,
+      backendTemplateConfig
+    );
+    const { data: frontendResult } = await projectApis.generateFrontendProject(
+      selectedFrontendTemplate,
+      frontendTemplateConfig
+    );
+
+    setState({
+      generatedBackendDir: backendResult.generatedDir,
+      generatedFrontendDir: frontendResult.generatedDir,
+    });
   };

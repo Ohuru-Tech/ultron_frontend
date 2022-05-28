@@ -8,6 +8,7 @@ import {
   setBackendSettings,
   setDbSettings,
   setFrontendSettings,
+  generateProjects,
 } from "apps/projects/actions/projectActions";
 
 defaults.devtools = true;
@@ -33,6 +34,7 @@ const Store = createStore({
     setBackendSettings,
     setDbSettings,
     setFrontendSettings,
+    generateProjects,
   },
 });
 
