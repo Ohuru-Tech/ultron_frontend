@@ -17,7 +17,6 @@ import { BackendSettings } from "apps/projects/components/BackendSettings";
 import { ChooseFrontendTemplate } from "apps/projects/components/ChooseFrontendTemplate";
 import { FrontendSettings } from "apps/projects/components/FrontendSettings";
 import useProjectStore from "apps/projects/stores/projectsStore";
-import ProjectAPIs from "apps/projects/utils/projectAPIs";
 import { CircularProgress } from "@mui/material";
 
 const steps = [
@@ -86,22 +85,24 @@ export function CreateProject() {
 
   useEffect(() => {
     async function downloadProject() {
-      const response = await fetch(
-        "https://evening-eyrie-26161.herokuapp.com/download/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/zip",
-          },
-          body: JSON.stringify({
-            frontend_dir: generatedFrontendDir,
-            backend_dir: generatedBackendDir,
-          }),
-        }
-      );
-      const blob = await response.blob();
-      saveAs(blob, "project.zip");
+      if (generatedProjects) {
+        const response = await fetch(
+          "https://evening-eyrie-26161.herokuapp.com/download/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/zip",
+            },
+            body: JSON.stringify({
+              frontend_dir: generatedFrontendDir,
+              backend_dir: generatedBackendDir,
+            }),
+          }
+        );
+        const blob = await response.blob();
+        saveAs(blob, "project.zip");
+      }
     }
     downloadProject();
   }, [generatedProjects]);

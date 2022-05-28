@@ -53,7 +53,7 @@ export function DatabaseSettings({ onSave, onBack }: Props) {
   return (
     <Container maxWidth="xl" sx={{ m: 1, mt: 3, p: 1 }}>
       <>
-        <Typography variant="h4">Select the desired database</Typography>
+        <Typography variant="h4">Enter the database settings</Typography>
         {loading ? (
           <Skeleton />
         ) : (
